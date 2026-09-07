@@ -57,7 +57,7 @@ _suggest_find() {
   return 1
 }
 
-# ── 1. History — suggestions are only as good as what's recorded ──
+# ── 2. History — suggestions are only as good as what's recorded ──
 HISTFILE=${HISTFILE:-$HOME/.zsh_history}
 HISTSIZE=200000
 SAVEHIST=200000
@@ -69,7 +69,7 @@ setopt HIST_IGNORE_SPACE      # a leading space keeps it out of history (tokens,
 setopt HIST_REDUCE_BLANKS
 setopt HIST_VERIFY            # history expansion loads the line for review, doesn't run it
 
-# ── 2. Completion — Tab opens a selectable menu ──
+# ── 3. Completion — Tab opens a selectable menu ──
 for _d in /opt/homebrew/share/zsh-completions /usr/local/share/zsh-completions; do
   # skipping unsafe dirs here keeps compinit from refusing the whole fpath later
   [[ -d $_d ]] && ! _suggest_unsafe $_d && fpath=($_d $fpath)
@@ -96,7 +96,7 @@ zstyle ':completion:*' cache-path "$HOME/.cache/zsh/compcache"
 setopt AUTO_MENU ALWAYS_TO_END COMPLETE_IN_WORD
 unsetopt MENU_COMPLETE
 
-# ── 3. Inline ghost text from history — the core Warp autosuggest behaviour ──
+# ── 4. Inline ghost text from history — the core Warp autosuggest behaviour ──
 if _autosuggest=$(_suggest_find zsh-autosuggestions); then
   ZSH_AUTOSUGGEST_STRATEGY=(history completion)
   ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
@@ -111,7 +111,7 @@ if _autosuggest=$(_suggest_find zsh-autosuggestions); then
 fi
 unset _autosuggest
 
-# ── 4. ↑/↓ search history by the prefix already on the line ──
+# ── 5. ↑/↓ search history by the prefix already on the line ──
 autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
@@ -120,7 +120,7 @@ bindkey '^[[B' down-line-or-beginning-search  # ↓
 bindkey '^P'   up-line-or-beginning-search
 bindkey '^N'   down-line-or-beginning-search
 
-# ── 5. fzf — Ctrl+R history, Ctrl+T files, Alt+C cd ──
+# ── 6. fzf — Ctrl+R history, Ctrl+T files, Alt+C cd ──
 if command -v fzf >/dev/null; then
   export FZF_DEFAULT_OPTS='--height 45% --layout=reverse --border --info=inline'
   export FZF_CTRL_R_OPTS='--reverse --prompt="history ❯ "'
@@ -153,7 +153,7 @@ if command -v fzf >/dev/null; then
   unset _fzf_cache
 fi
 
-# ── 6. Syntax highlighting — must be sourced last ──
+# ── 7. Syntax highlighting — must be sourced last ──
 if _highlight=$(_suggest_find zsh-syntax-highlighting); then
   _suggest_source $_highlight
 fi
